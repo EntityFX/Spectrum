@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{061ACA93-157D-44A3-A5BA-160B5A3378C5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EntityFX.Core</RootNamespace>
+    <AssemblyName>EntityFX.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Cpu\IAlu.cs" />
+    <Compile Include="Common\Cpu\IZilogZ80Cpu.cs" />
+    <Compile Include="Common\Cpu\ICpuStack.cs" />
+    <Compile Include="Common\Cpu\IExecutionUnit.cs" />
+    <Compile Include="Common\Cpu\ILookupTables.cs" />
+    <Compile Include="Common\Cpu\OnFetchHandler.cs" />
+    <Compile Include="Common\Devices\IInputDevice.cs" />
+    <Compile Include="Common\Devices\IInputOutputDevice.cs" />
+    <Compile Include="Common\Memory\IMemory.cs" />
+    <Compile Include="Common\Devices\IOutputDevice.cs" />
+    <Compile Include="Common\Cpu\Registers\ByteRegister.cs" />
+    <Compile Include="Common\Cpu\Registers\IRegisterFile.cs" />
+    <Compile Include="CPU\Alu.cs" />
+    <Compile Include="CPU\ZilogZ80Cpu.cs" />
+    <Compile Include="CPU\CpuStack.cs" />
+    <Compile Include="CPU\ExecutionUnit.cs" />
+    <Compile Include="CPU\LookupTables.cs" />
+    <Compile Include="CPU\Registers\FlagRegisterDefinition.cs" />
+    <Compile Include="CPU\Registers\RegisterFile.cs" />
+    <Compile Include="Common\Cpu\Registers\WordRegister.cs" />
+    <Compile Include="Devices\IKeyboardInput.cs" />
+    <Compile Include="Devices\Keyboard.cs" />
+    <Compile Include="Devices\Video.cs" />
+    <Compile Include="FileReader\Format1.cs" />
+    <Compile Include="FileReader\Format2.cs" />
+    <Compile Include="Platforms\ISpectrumIO.cs" />
+    <Compile Include="Devices\IVideoOutput.cs" />
+    <Compile Include="Platforms\Z48\Z48IO.cs" />
+    <Compile Include="Platforms\Z48\Z48Memory.cs" />
+    <Compile Include="Platforms\Z48\Z48Spectrum.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Platforms\Z128\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
