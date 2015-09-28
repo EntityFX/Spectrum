@@ -55,16 +55,16 @@ namespace EntityFX.Spectrum.UI
         {
             _spectrum = new Z48Spectrum();
             disassembler = new Z80Disassembler(_spectrum.Memory);
-            _spectrum.LoadROM(@"48.rom");
+            _spectrum.LoadROM(@"ZXS48.rom");
             _spectrum.Video.OutputBitmap = (Bitmap)spectrumVideoOutputPictureBox.Image;
 
             var dump = MemoryDumpHelper.DumpAsText(_spectrum.Memory);
             //var diassembly = disassembler.DisassembleAll(_spectrum.Memory);
 
-            byte[] buffer = File.ReadAllBytes(@"C:\Users\SolopiyA\Downloads\cse-code-7\cse-code-7\roms\POPCORN.Z80");
+            /*byte[] buffer = File.ReadAllBytes(@"C:\Users\SolopiyA\Downloads\cse-code-7\cse-code-7\roms\POPCORN.Z80");
             Format2 fileFormatz80 = new Format2();
             fileFormatz80.Read(buffer);
-            _spectrum.LoadRAMFromFile(fileFormatz80);
+            _spectrum.LoadRAMFromFile(fileFormatz80);*/
         }
 
         private void button1_Click(object sender, EventArgs e)

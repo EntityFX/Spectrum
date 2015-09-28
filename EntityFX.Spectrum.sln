@@ -9,6 +9,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFX.Core", "EntityFX.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFX.Spectrum.UI", "EntityFX.Spectrum.UI\EntityFX.Spectrum.UI.csproj", "{A09BBD3F-66F6-414C-AA60-FE6668564914}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{C72456A2-E6D0-4815-B306-57974635F28A}"
+	ProjectSection(SolutionItems) = preProject
+		Doc\Z80-Central-Processor-Unit.pdf = Doc\Z80-Central-Processor-Unit.pdf
+		Doc\Полное описание команд микропроцессора Z80.docx = Doc\Полное описание команд микропроцессора Z80.docx
+		Doc\Полное описание команд микропроцессора Z80.pdf = Doc\Полное описание команд микропроцессора Z80.pdf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roms", "Roms", "{6794121A-356D-4A05-B123-991F47DF4B82}"
+	ProjectSection(SolutionItems) = preProject
+		Roms\ZXS128.ROM = Roms\ZXS128.ROM
+		Roms\ZXS48.ROM = Roms\ZXS48.ROM
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
