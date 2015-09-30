@@ -26,7 +26,7 @@ namespace EntityFX.Core.CPU.Registers
         public const byte V = 0x04;
 
         /// <summary>
-        ///     Not used
+        ///     3th bit of byte: xxxx *xxx
         /// </summary>
         public const byte _3 = 0x08;
 
@@ -36,7 +36,7 @@ namespace EntityFX.Core.CPU.Registers
         public const byte H = 0x10;
 
         /// <summary>
-        ///     Not used
+        ///     5th bit of byte: xx*x xxxx
         /// </summary>
         public const byte _5 = 0x20;
 

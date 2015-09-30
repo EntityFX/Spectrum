@@ -1,0 +1,81 @@
+  #		OpCode							Hex		Mnemonic		Flags	S Z 5 H 3 P/V N C		Ticks	Status	Count
+  1.	00 000 000						0x00	NOP						- - - - - -   - -		4		OK		1
+  *.	00 RR0 011						----	INC RR					- - - - - -   - -		6				4
+  *.	00 RR1 011						----	DEC RR					- - - - - -   - -		6				4
+  *.	00 rrr 100						----	INC rrr					+ + 5 + 3 V   0 -		4				8
+  *.	00 rrr 101						----	DEC rrr					+ + 5 + 3 V   0 -		4				8
+  *.	00 RR0 001	NNNNNNNN NNNNNNNN	----	LD RR, NN				- - - - - -   - -		10				4
+  *.	00 rrr 110	NNNNNNNN			----	LD r, N					- - - - - -   - -		7				8
+  2.	00 000 010						0x02	LD (BC), A				- - - - - -   - -		7		OK		1
+  3.	00 000 111						0x07	RLCA					- - 5 0 3 -   0 +		4		OK		1
+  4.	00 001 000						0x08	EX AF, AF'				* * * * * *   * *		4		OK		1
+  *.	00 RR1 001						----	ADD HL, RR				- - * * * -   0 +		11				4
+  5.	00 001 010						0x0A	LD A, (BC)				- - - - - -   - -		7		OK		1
+  6.	00 001 111						0x0F	RRCA					- - 5 0 3 -   0 +		4		OK		1
+  7.	00 010 000 ssssssss				0x10	DJNZ s					- - - - - -   - -		8/13	OK		1
+  8.	00 010 010						0x12	LD (DE), A				- - - - - -   - -		7		OK		1
+  9.	00 010 111						0x17	RLA						- - 5 0 3 -   0 +		4		OK		1
+ 10.	00 011 000 ssssssss				0x18	JR s					- - - - - -   - -		7		OK		1
+ 11.	00 011 010						0x1A    LD A, (DE)				- - - - - -   - -		7		OK		1
+ 12.	00 011 111						0x1F	RRA						- - 5 0 3 -   0 +		4		OK		1
+ 13.	00 100 000 ssssssss				0x20	JR NZ, s				- - - - - -   - -		7/12	OK		1
+ 14.	00 100 010 NNNNNNNN NNNNNNNN	0x22	LD (NN), HL				- - - - - -   - -		16		OK		1
+ 15.	00 100 111						0x27	DAA						* * * * * *   - *		4		OK		1
+ 16.	00 101 000 ssssssss				0x28	JR Z, s					- - - - - -   - -		7/12	OK		1
+ 17.	00 101 010 NNNNNNNN NNNNNNNN	0x2A	LD HL, (NN)				- - - - - -   - -		16		OK		1
+ 18.	00 101 111						0x2F	CPL						- - 5 1 3 -   1 -		4		OK		1
+ 19.	00 100 000 ssssssss				0x30	JR NC, s				- - - - - -   - -		7/12	OK		1
+ 20.	00 110 010 NNNNNNNN NNNNNNNN	0x32	LD (NN), A				- - - - - -   - -		13		OK		1
+ 21.	00 110 111						0x37	SCF						- - * 0 * -	  0 1		4		OK		1
+ 22.	00 111 000						0x38	JR C, s					- - - - - -   - -		7/12			1
+ 23.	00 111 010 NNNNNNNN NNNNNNNN	0x3A	LD A, (NN)				- - - - - -   - -		13				1
+ 24.	00 111 111						0x3F	CCF						- - * * * -	  0 *		4				1
+ *.		01 ddd rrr						----	LD d, r					- - - - - -   - -		4				49
+ -.		01 110 110						0x76	HALT					- - - - - -   - -		*				1
+ *.		10 000 rrr						----	ADD A, r				+ + 5 + 3 V   0 +		4				7
+ *.		10 001 rrr						----	ADC A, r				+ + 5 + 3 V   0 +		4				7
+ *.		10 010 rrr						----	SUB r					+ + 5 + 3 V   1 +		4				7
+ *.		10 011 rrr						----	SBC A, r				+ + 5 + 3 V   1 +		4				7
+ *.		10 100 rrr						----	AND r					+ + 5 1 3 P   0 0		4				7
+ *.		10 101 rrr						----	XOR r					+ + 5 0 3 P   0 0		4				7
+ *.		10 110 rrr						----	OR r					+ + 5 0 3 P   0 0		4				7
+ *.		10 111 rrr						----	CP r					+ + 5 + 3 V   1 + 		4				7
+ *.		11 ccc 000						----	RET c					- - - - - -   - - 		8				5/11
+ 25.	11 000 011 NNNNNNNN NNNNNNNN	0xC3	JP NN					- - - - - -   - -		10				1
+ 26.	11 000 110 NNNNNNNN				0xC6	ADD A, N				+ + 5 + 3 V   0 +		7				1
+ 27.	11 001 001						0xC9	RET						- - - - - -   - -		10				1
+ 28.	11 001 011						0xCB	#CB
+ 29.	11 001 101 NNNNNNNN NNNNNNNN	0xCD	CALL NN					- - - - - -   - -		17				1
+ 30.	11 001 110 NNNNNNNN				0xCE	ADC A, N				+ + 5 + 3 V   0 +		7				1
+ 31.	11 010 011 NNNNNNNN				0xD3	OUT (N), A				- - - - - -   - -		11				1
+ 32.	11 010 110 NNNNNNNN				0xD6	SUB N					+ + 5 + 3 V	  1 +		7				1
+ 33.	11 011 001						0xD9	EXX						- - - - - -   - -		4				1
+ 34.	11 011 011 NNNNNNNN				0xDB	IN A, (N)				- - - - - -   - -		11				1
+ 35.	11 011 101						0xDD	#DD
+ 36.	11 011 110 NNNNNNNN				0xDE	SBC A, N				+ + 5 + 3 V   1 +		7				1
+ 37.	11 100 011						0xE3	EX (SP), HL				- - - - - -   - -		19				1
+ 38.	11 100 110 NNNNNNNN				0xE6	AND N					+ + 5 1 3 P   0 0		7				1
+ 39.	11 101 001						0xE9	JP (HL)					- - - - - -   - -		10				1
+ 40.	11 101 011						0xEB	EX DE, HL				- - - - - -   - -		4				1
+ 41.	11 101 101						0xED	#ED
+ 42.	11 101 110 NNNNNNNN				0xEE	XOR N					+ + 5 0 3 P   0 0		7				1
+ 43.	11 110 011						0xF3	DI						- - - - - -   - -		4				1
+ 44.	11 110 110 NNNNNNNN				0xF6	OR N					+ + 5 0 3 P   0 0		7				1
+ 45.	11 111 001						0xF9	LD SP, HL				- - - - - -   - -		6				1
+ 46.	11 111 011						0xFB	EI						- - - - - -   - -		4				1
+ 47.	11 111 101						0xFD	#FD
+ 48.	11 111 110						0xFE	CP N					+ + 5 + 3 V   1 +		7				1
+
+/// <summary>
+/// Opcode:     00 000 000
+/// Mnemonic:   MM OP1, OP2
+/// Flags:
+///             S Z 5 H 3 P/V N C
+///             - - - - - -   - -
+/// Tick:       0
+/// </summary>
+
+
+NOP, LD, INC, DEC, ADD, ADC, SUB, SBC, AND, XOR, OR, CP, CPL, NEG, DAA, RLA, RRA, RLCA, RRCA, RLD, RRD, RLC, RRC, RL, RR, SLA, SRA, SLI, SRL, BIT, RES, SET, EX,
+EXX, POP, PUSH, JP, JR, DJNZ, CALL, RET, RST, CCF, SCF, LDI, LDD, LDIR, LDDR, CPI, CPD, CPIR, CPDR, INI, IND, INIR, INDR, OUTI, OUTD, OUTIR, OUTDR, IN, OUT,
+INF, OUTF, DI, EI, IM, RETI, RETN, HALT (70 mnemonics)

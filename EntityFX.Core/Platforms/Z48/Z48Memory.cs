@@ -5,14 +5,16 @@ namespace EntityFX.Core.Platforms.Z48
 {
     public class Z48Memory : IMemory
     {
-        readonly byte[] _memory = new byte[0x10000];
+        public const int MemorySize = 0x10000;
+
+        readonly byte[] _memory = new byte[MemorySize];
 
         /// <summary>
         ///     Total size in byte of memory (include paged memory too)
         /// </summary>
         public int Size
         {
-            get { return 0x10000; }
+            get { return MemorySize; }
         }
 
         /// <summary>

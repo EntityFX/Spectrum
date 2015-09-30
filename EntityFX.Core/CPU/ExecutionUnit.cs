@@ -140,6 +140,14 @@ namespace EntityFX.Core.CPU
             _registerFile.F |= (byte)((result & FlagRegisterDefinition._3) | ((result & 0x02) != 0 ? FlagRegisterDefinition._5 : (byte)0));
         }
 
+        /// <summary>
+        /// Opcode:     00 101 111
+        /// Mnemonic:   CPL
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - 5 1 3 -   1 -
+        /// Tick:       4
+        /// </summary>
         public void CPL()
         {
             CpuTicks += 4;
@@ -243,6 +251,14 @@ namespace EntityFX.Core.CPU
             _registerFile.F = (byte)((_registerFile.F & (FlagRegisterDefinition.C | FlagRegisterDefinition.Z | FlagRegisterDefinition.S)) | (_registerFile.BC != 0 ? FlagRegisterDefinition.V : (byte)0) | (_b & FlagRegisterDefinition._3) | ((_b & 0x02) != 0 ? FlagRegisterDefinition._5 : (byte)0));
         }
 
+        /// <summary>
+        /// Opcode:     00 001 010
+        /// Mnemonic:   LD A, (BC)
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7
+        /// </summary>
         public void LD_A_BCA()
         {
             CpuTicks += 7;
@@ -267,13 +283,20 @@ namespace EntityFX.Core.CPU
             register.Word = _memory.ReadWord(address);
         }
 
+        /// <summary>
+        /// The 2-byte contents of the register pairs AF and AF are exchanged.
+        /// Register pair AF consists of registers A' and F'.
+        /// 
+        /// Opcode:     00 001 000
+        /// Mnemonic:   NOP
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             * * * * * *   * *
+        /// Tick:       4
+        /// </summary>
         public void EX_AF_AFAlt()
         {
             CpuTicks += 4;
-            // The 2-byte contents of the register pairs AF and AF are exchanged.
-            // Register pair AF consists of registers A' and F'.
-
-
             // Tape saving trap: note this traps the EX AF,AF' at #04d0, not #04d1 as PC has already been incremented 
             if (_registerFile.PC == 0x04d1)
             {
@@ -285,6 +308,14 @@ namespace EntityFX.Core.CPU
             _registerFile.RegisterAF.Swap(_registerFile.RegisterAFAlt);
         }
 
+        /// <summary>
+        /// Opcode:     00 000 010
+        /// Mnemonic:   LD (BC), A
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - 5 0 3 -   0 +
+        /// Tick:       4
+        /// </summary>
         public void RLCA()
         {
             CpuTicks += 4;
@@ -297,9 +328,22 @@ namespace EntityFX.Core.CPU
             _registerFile.PC = _memory.ReadWord(_registerFile.PC);
         }
 
+        /// <summary>
+        /// Opcode:     00 011 000 ssssssss
+        /// Mnemonic:   DJNZ s
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       12
+        /// </summary>
         public void JR()
         {
             CpuTicks += 12;
+            _JR();
+        }
+
+        private void _JR()
+        {
             _registerFile.PC = (ushort)((int)_registerFile.PC + (sbyte)_memory.ReadByte(_registerFile.PC));
             _registerFile.PC++;
         }
@@ -360,14 +404,8 @@ namespace EntityFX.Core.CPU
         /// </summary>
         public void Execute()
         {
-            ushort Address;
-
-
             while (CpuTicks < EventNextEvent)
             {
-
-                byte opcode;
-
                 // Check if Statement to fetch must be handled
                 if (StatementsToFetch >= 0)
                 {
@@ -393,7 +431,7 @@ namespace EntityFX.Core.CPU
                 }
 
                 // Fetch next instruction
-                opcode = _memory.ReadByte(_registerFile.PC++);
+                var opcode = _memory.ReadByte(_registerFile.PC++);
 
                 // Increment refresh register
                 _registerFile.R++;
@@ -621,7 +659,6 @@ namespace EntityFX.Core.CPU
                             DAA();
                             break;
                         case 0x28:      // 00 101 000 ssssssss	        JR Z, s
-                            CpuTicks += 7;
                             JR_Z();
                             break;
                         case 0x2A:      // 00 101 010 NNNNNNNN NNNNNNNN	LD HL, (NN)
@@ -937,13 +974,31 @@ namespace EntityFX.Core.CPU
             _registerFile.PC++;
         }
 
+        /// <summary>
+        /// Opcode:     00 110 111
+        /// Mnemonic:   SCF
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - * 0 * -	  0 1
+        /// Tick:       4
+        /// </summary>
         private void SCF()
         {
             CpuTicks += 4;
-            _registerFile.F |= FlagRegisterDefinition.C;
+            _registerFile.F = (byte)((_registerFile.F & ~(FlagRegisterDefinition.H | FlagRegisterDefinition.N)) 
+                | FlagRegisterDefinition.C 
+                | (_registerFile.A & (FlagRegisterDefinition._3 | FlagRegisterDefinition._5)));
         }
 
-        private void LD_NNA_A()
+        /// <summary>
+        /// Opcode:     00 110 010
+        /// Mnemonic:   LD (NN), A
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       13
+        /// </summary>
+        public void LD_NNA_A()
         {
             CpuTicks += 13;
             var address = _memory.ReadWord(_registerFile.PC);
@@ -951,6 +1006,14 @@ namespace EntityFX.Core.CPU
             _memory.WriteByte(address, _registerFile.A);
         }
 
+        /// <summary>
+        /// Opcode:     00 110 000 ssssssss
+        /// Mnemonic:   JR NC, s
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7/12
+        /// </summary>
         private void JR_NC()
         {
             CpuTicks += 7;
@@ -962,14 +1025,31 @@ namespace EntityFX.Core.CPU
             _registerFile.PC++;
         }
 
-        private void LD_HL_NNA()
+        /// <summary>
+        /// Opcode:     00 101  010
+        /// Mnemonic:   LD HL, (NN)
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       16
+        /// </summary>
+        public void LD_HL_NNA()
         {
             CpuTicks += 16;
             LD_ddnn(_registerFile.RegisterHL);
         }
 
+        /// <summary>
+        /// Opcode:     00 101 000 ssssssss
+        /// Mnemonic:   JR NZ, s
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7/12
+        /// </summary>
         private void JR_Z()
         {
+            CpuTicks += 7;
             if ((_registerFile.F & FlagRegisterDefinition.Z) != 0)
             {
                 CpuTicks += 5;
@@ -978,12 +1058,28 @@ namespace EntityFX.Core.CPU
             _registerFile.PC++;
         }
 
+        /// <summary>
+        /// Opcode:     00 100  010
+        /// Mnemonic:   LD (NN), HL
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       16
+        /// </summary>
         private void LD_NNA_HL()
         {
             CpuTicks += 16;
             LD_nndd(_registerFile.RegisterHL);
         }
 
+        /// <summary>
+        /// Opcode:     00 100 000 ssssssss
+        /// Mnemonic:   JR NZ, s
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7/12
+        /// </summary>
         private void JR_NZ()
         {
             CpuTicks += 7;
@@ -995,24 +1091,56 @@ namespace EntityFX.Core.CPU
             _registerFile.PC++;
         }
 
-        private void LD_A_DEA()
+        /// <summary>
+        /// Opcode:     00 011 010
+        /// Mnemonic:   LD A, (BC)
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7
+        /// </summary>
+        public void LD_A_DEA()
         {
             CpuTicks += 7;
             _registerFile.A = _memory.ReadByte(_registerFile.DE);
         }
 
+        /// <summary>
+        /// Opcode:     00 010 111
+        /// Mnemonic:   RLA
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - 5 0 3 -   0 +
+        /// Tick:       4
+        /// </summary>
         public void RLA()
         {
             CpuTicks += 4;
             _alu.RLA();
         }
 
-        private void LD_DEA_A()
+        /// <summary>
+        /// Opcode:     00 010 010
+        /// Mnemonic:   LD (DE), A
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7
+        /// </summary>
+        public void LD_DEA_A()
         {
             CpuTicks += 7;
             _memory.WriteByte(_registerFile.DE, _registerFile.A);
         }
 
+        /// <summary>
+        /// Opcode:     00 010 000 ssssssss
+        /// Mnemonic:   DJNZ s
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       8/13
+        /// </summary>
         private void DJNZ()
         {
             CpuTicks += 8;
@@ -1020,11 +1148,19 @@ namespace EntityFX.Core.CPU
             if (_registerFile.B != 0)
             {
                 CpuTicks += 5;
-                JR();
+                _JR();
             }
             _registerFile.PC++;
         }
 
+        /// <summary>
+        /// Opcode:     00 001 111
+        /// Mnemonic:   RRCA
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - 5 0 3 -   0 +
+        /// Tick:       4
+        /// </summary>
         public void RRCA()
         {
             CpuTicks += 4;
@@ -1876,6 +2012,14 @@ namespace EntityFX.Core.CPU
             return ((_registerFile.F & flag) != 0);
         }
 
+        /// <summary>
+        /// Opcode:     00 000 000
+        /// Mnemonic:   NOP
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       4
+        /// </summary>
         public void NOP()
         {
             CpuTicks += 4;
@@ -1894,6 +2038,14 @@ namespace EntityFX.Core.CPU
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Opcode:     00 000 010
+        /// Mnemonic:   LD (BC), A
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - - - - -   - -
+        /// Tick:       7
+        /// </summary>
         public void LD_BCA_A()
         {
             CpuTicks += 7;
@@ -1925,6 +2077,14 @@ namespace EntityFX.Core.CPU
             _alu.ADD_16(op1, op2);
         }
 
+        /// <summary>
+        /// Opcode:     00 100 111
+        /// Mnemonic:   DAA
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             * * * * * *   - *
+        /// Tick:       4
+        /// </summary>
         public void DAA()
         {
             CpuTicks += 4;
@@ -1966,6 +2126,14 @@ namespace EntityFX.Core.CPU
             _alu.RR(op);
         }
 
+        /// <summary>
+        /// Opcode:     00 011 111
+        /// Mnemonic:   RRA
+        /// Flags:
+        ///             S Z 5 H 3 P/V N C
+        ///             - - 5 0 3 -   0 +
+        /// Tick:       4
+        /// </summary>
         public void RRA()
         {
             CpuTicks += 4;

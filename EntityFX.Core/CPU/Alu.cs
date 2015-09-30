@@ -149,12 +149,12 @@ namespace EntityFX.Core.CPU
 
         public void RLA()
         {
-            byte _A = _registerFile.A;
+            byte a = _registerFile.A;
             _registerFile.A = (byte)((_registerFile.A << 1) | (_registerFile.F & FlagRegisterDefinition.C));
             _registerFile.F = (byte)(
                 (_registerFile.F & (FlagRegisterDefinition.P | FlagRegisterDefinition.Z | FlagRegisterDefinition.S)) |
                 (_registerFile.A & (FlagRegisterDefinition._3 | FlagRegisterDefinition._5)) |
-                (_A >> 7));
+                (a >> 7));
         }
 
         public void RLCA()

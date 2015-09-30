@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFX.Spectrum.UI", "Ent
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{C72456A2-E6D0-4815-B306-57974635F28A}"
 	ProjectSection(SolutionItems) = preProject
+		Verify.txt = Verify.txt
 		Doc\Z80-Central-Processor-Unit.pdf = Doc\Z80-Central-Processor-Unit.pdf
 		Doc\Полное описание команд микропроцессора Z80.docx = Doc\Полное описание команд микропроцессора Z80.docx
 		Doc\Полное описание команд микропроцессора Z80.pdf = Doc\Полное описание команд микропроцессора Z80.pdf
